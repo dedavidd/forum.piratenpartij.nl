@@ -1,4 +1,0 @@
-smf
-===
-
-SMF implementation.
