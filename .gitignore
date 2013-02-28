@@ -1,5 +1,6 @@
 *.DS_Store
 *.xcuserdata
 *.xcworkspace
+images/*
 .htaccess
 GLOBALS.php
