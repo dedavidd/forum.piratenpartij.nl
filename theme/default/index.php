@@ -428,7 +428,7 @@ if ($FUD_OPT_1 & 1073741824 || $FUD_OPT_2 & 16) {
   </div>
   ' : ''); ?>
   <a href="index.php" title="Startpagina">
-    <img src="theme/default/images/header.gif" alt="" align="left" height="80" />
+    <img src="theme/default/images/header-pp.png" alt="" align="left" height="80" />
     <span class="headtitle"><?php echo $GLOBALS['FORUM_TITLE']; ?></span>
   </a><br />
   <span class="headdescr"><?php echo $GLOBALS['FORUM_DESCR']; ?><br /><br /></span>
@@ -445,7 +445,7 @@ if ($FUD_OPT_1 & 1073741824 || $FUD_OPT_2 & 16) {
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="https://pwm.piratenpartij.nl/pwm/public/NewUser?forwardURL=https%3A%2F%2Fforum.piratenpartij.nl" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 /*& 2*/ ? '<li><a href="https://pwm.piratenpartij.nl/pwm/public/NewUser?forwardURL=https%3A%2F%2Fforum.piratenpartij.nl" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
@@ -526,7 +526,7 @@ if ($FUD_OPT_1 & 1073741824 || $FUD_OPT_2 & 16) {
 </div>
 <div class="footer ac">
 	<b>.::</b>
-	<a href="mailto:<?php echo $GLOBALS['ADMIN_EMAIL']; ?>">Contact</a>
+	<a href="mailto:bestuur@piratenpartij.nl">Contact</a>
 	<b>::</b>
 	<a href="index.php?t=index&amp;<?php echo _rsid; ?>">Hoofdmenu</a>
 	<b>::.</b>
