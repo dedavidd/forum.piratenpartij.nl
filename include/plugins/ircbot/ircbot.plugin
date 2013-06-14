@@ -17,16 +17,20 @@ plugin_add_hook('POST_REGISTER', 'plugin_ircbot_register');
 function plugin_ircbot_post($msg_post) {
 	$user = q_singleval('SELECT alias FROM '. $GLOBALS['DBHOST_TBL_PREFIX'] .'users WHERE id ='. $msg_post->poster_id);
 	$url = $GLOBALS['WWW_ROOT'] .'index.php?t=msg&goto='. $msg_post->id .'#msg_'. $msg_post->id;
+	$threadid = q_singleval('SELECT thread_id FROM '. $GLOBALS['DBHOST_TBL_PREFIX'] .'msg WHERE id='. $msg_post->id);
+	$forumid = q_singleval('SELECT forum_id FROM '. $GLOBALS['DBHOST_TBL_PREFIX'] .'thread WHERE id='. $threadid);
 
-	$fh = fopen($GLOBALS['PLUGIN_PATH'] . 'ircbot/ircbot.pending', 'a');
-	if ($msg_post->reply_to == 0) {
-		fwrite($fh, "New topic by \00304". $user ."\003 at ". $url .":\n");
-	} else {
-		fwrite($fh, "New reply by \002". $user ."\002 at ". $url .":\n");
+	if ($forumid != "27" && $forumid != "28" && $forumid != "29" && $forumid != "30" && $forumid != "31" && $forumid !="33") {
+		$fh = fopen($GLOBALS['PLUGIN_PATH'] . 'ircbot/ircbot.pending', 'a');
+		if ($msg_post->reply_to == 0) {
+			fwrite($fh, "New topic by \00304". $user ."\003 at ". $url .":\n");
+		} else {
+			fwrite($fh, "New reply by \002". $user ."\002 at ". $url .":\n");
+		}
+		fwrite($fh, "\00303". $msg_post->subject ."\003\n");
+		fclose($fh);
+		return($msg_post);
 	}
-	fwrite($fh, "\00303". $msg_post->subject ."\003\n");
-	fclose($fh);
-	return($msg_post);
 }
 
 // Announce new user registration on IRC channel.

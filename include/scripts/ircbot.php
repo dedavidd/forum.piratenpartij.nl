@@ -211,13 +211,13 @@ function sig_handler($signo)
 		case ':botsnack':
 			send_command('PRIVMSG '. $parts[2] ." ::D");
 			break;
-		case ':@exit':
+		/*case ':@exit':
 		case ':@die':
 		case ':@quit':
 		case ':@shutdown':
 			send_command('QUIT :Terminated op verzoek van gebruiker');
 			break;
-		}
+		}*/
 
 		// Call IRC plugins.
 		if (defined('plugins')) {
