@@ -216,8 +216,8 @@ function sig_handler($signo)
 		case ':@quit':
 		case ':@shutdown':
 			send_command('QUIT :Terminated op verzoek van gebruiker');
-			break;
-		}*/
+			break;*/
+		}
 
 		// Call IRC plugins.
 		if (defined('plugins')) {
