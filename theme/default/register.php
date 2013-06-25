@@ -1439,8 +1439,25 @@ function encode_subject($text)
 	return $text;
 }
 
+
 function send_email($from, $to, $subj, $body, $header='', $munge_newlines=1)
 {
+        if(strpos($to,"ldap.piratenpartij.nl")>1)
+                {
+                        $pos=strpos($to,"@");
+                        $login=substr($to,0,$pos);
+                        include('/var/www/FUDforum/plugins/ldap/ldap.ini');
+                        $connection = ldap_connect("ldaps://" . $ini['LDAP_HOST'] . ":" . $ini['LDAP_PORT']);
+                        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                        ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
+                        $bind = ldap_bind($connection, $ini['LDAP_PROXY_DN'], $ini['LDAP_PROXY_DN_PASS']);
+                        $search = ldap_search($connection, $ini['LDAP_DN'], $ini['LDAP_UID'] .'='. $login);
+                        $count=ldap_count_entries($connection,$search);
+                        if($count!=1){echo('Could not find ldap user!'.$login.$count);}
+                        $info = ldap_get_entries($connection, $search);
+                        $mail= $info[0]['mail'][0];
+                        $to="$mail";
+                }
 	if (empty($to)) {
 		return 0;
 	}
@@ -1580,7 +1597,7 @@ function is_allowed_user(&$usr, $simple=0)
 		}
 		setcookie($GLOBALS['COOKIE_NAME'].'1', 'd34db33fd34db33fd34db33fd34db33f', ($ban_expiry ? $ban_expiry : (__request_timestamp__ + 63072000)), $GLOBALS['COOKIE_PATH'], $GLOBALS['COOKIE_DOMAIN']);
 		if ($banned) {
-			error_dialog('Fout: U bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
+			error_dialog('Fout: u bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
 		} else {
 			error_dialog('Fout: uw gebruiker is uitgefilterd.', 'Uw gebruiker is verbannen van het forum vanwege een ingestelde filter.');
 		}
@@ -2011,7 +2028,7 @@ function register_form_check($user_id)
 
 	/* User's name or nick name. */
 	if (strlen($_POST['reg_name']) < 2) {
-		set_err('reg_name', 'Om deze registratie succesvol af te sluiten moet u uw naam opgeven.');
+		set_err('reg_name', 'Geef uw naam op om deze registratie af te sluiten.');
 	}
 
 	/* Image count check. */
@@ -2034,7 +2051,7 @@ function register_form_check($user_id)
 				set_err('reg_alias', 'Deze alias is niet toegestaan');
 			}
 			if (q_singleval('SELECT id FROM fud30_users WHERE alias='. _esc(make_alias($_POST['reg_alias'])) .' AND id!='. $user_id)) {
-				set_err('reg_alias', 'De alias die u hebt gekozen wordt al door een ander forumlid gebruikt. Kies alstublieft een andere alias.');
+				set_err('reg_alias', 'De alias die u hebt gekozen wordt al door een ander forumlid gebruikt. Geef een andere alias op.');
 			}
 		}
 	}
@@ -2049,7 +2066,7 @@ function register_form_check($user_id)
 			$c = q_singleval('SELECT posted_msg_count FROM fud30_users WHERE id='. _uid);
 			if ( $GLOBALS['POSTS_BEFORE_LINKS'] > $c ) {
 				$posts_before_links = $GLOBALS['POSTS_BEFORE_LINKS'];
-				set_err('reg_sig', 'U kunt geen verwijzingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt toegevoegd.');
+				set_err('reg_sig', 'U kunt geen koppelingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt geplaatst.');
 			}
 		}
 	}
@@ -2060,7 +2077,7 @@ function register_form_check($user_id)
 			$c = q_singleval('SELECT posted_msg_count FROM fud30_users WHERE id='. _uid);
 			if ( $GLOBALS['POSTS_BEFORE_LINKS'] > $c ) {
 				$posts_before_links = $GLOBALS['POSTS_BEFORE_LINKS'];
-				set_err('reg_home_page', 'U kunt geen verwijzingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt toegevoegd.');
+				set_err('reg_home_page', 'U kunt geen koppelingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt geplaatst.');
 			}
 		}
 	}
@@ -2349,15 +2366,15 @@ function email_encode($val)
 			}
 
 			if ($FUD_OPT_2 & 1) {
-				send_email($NOTIFY_FROM, $uent->email, 'Registratiebevestiging', 'Dank u voor uw registratie.\nVolg de volgende verwijzing om uw gebruiker te activeren:\n\n'.$GLOBALS['WWW_ROOT'].'index.php?t=emailconf&conf_key='.$uent->conf_key.'\n\nAls uw gebruiker is geactiveerd, wordt u aangemeld bij het forum en automatisch doorverwezen naar de hoofdpagina.', '');
+				send_email($NOTIFY_FROM, $uent->email, 'Registratiebevestiging', 'Dank u voor uw registratie.\nVolg de volgende koppeling om uw gebruiker te activeren:\n\n'.$GLOBALS['WWW_ROOT'].'index.php?t=emailconf&conf_key='.$uent->conf_key.'\n\nAls uw gebruiker is geactiveerd, wordt u aangemeld bij het forum en automatisch doorverwezen naar de hoofdpagina.', '');
 			} else if (!($FUD_OPT_3 & 2048)) {
-				send_email($NOTIFY_FROM, $uent->email, 'Bevestiging van forumregistratie', 'Dank u voor uw registratie.\n\nHier volgen uw aanmeldgegevens voor het forum:\n\nURL van het forum: index.php?t=index\nGebruikersnaam: '.$uent->login.'\nWachtwoord: '.$_POST['reg_plaintext_passwd'].'\n\nLet op: wachtwoorden zijn hoofdlettergevoelig!\nOm uw instellingen of profiel aan te passen, kunt u de volgende verwijzing volgen:\n'.$GLOBALS['WWW_ROOT'].'index.php?t=register\n', '');
+				send_email($NOTIFY_FROM, $uent->email, 'Bevestiging van forumregistratie', 'Dank u voor uw registratie.\n\nHier volgen uw aanmeldgegevens voor het forum:\n\nURL van het forum: index.php?t=index\nGebruikersnaam: '.$uent->login.'\nWachtwoord: '.$_POST['reg_plaintext_passwd'].'\n\nLet op: wachtwoorden zijn hoofdlettergevoelig!\nOm uw instellingen of profiel aan te passen, kunt u de volgende koppeling volgen:\n'.$GLOBALS['WWW_ROOT'].'index.php?t=register\n', '');
 			}
 
 			/* We notify all admins about the new user, so that they can approve him. */
 			if (($FUD_OPT_2 & 132096) == 132096) {
 				$admins = db_all('SELECT email FROM fud30_users WHERE users_opt>=1048576 AND '. q_bitand('users_opt', 1048576) .' > 0');
-				send_email($NOTIFY_FROM, $admins, 'Een nieuwe gebruiker heeft zich geregistreerd en moet nog bevestigd worden', 'De nieuwe gebruiker '.$uent->login.' is zojuist aangemeld voor het forum. Omdat gebruikersbevestiging is ingeschakeld, is de gebruiker pas bruikbaar nadat u of een andere beheeder de gebruiker bevestigt. Ga voor bevestigen alstublieft naar: '.$GLOBALS['WWW_ROOT'].'adm/admuserapr.php\n\nDit is een automatisch verzonden bericht. Antwoord hier niet op.\nE-mailberichten over nieuwe gebruikers uitschakelen is mogelijk via de instelling "Waarschuwingen nieuwe gebruikers" in de beheerdersinstellingen.', '');
+				send_email($NOTIFY_FROM, $admins, 'Een nieuwe gebruiker heeft zich geregistreerd en moet nog bevestigd worden', 'De nieuwe gebruiker '.$uent->login.' is zojuist aangemeld voor het forum. Omdat gebruikersbevestiging is ingeschakeld, is de gebruiker pas bruikbaar nadat u of een andere beheeder de gebruiker bevestigt. Ga voor bevestigen naar: '.$GLOBALS['WWW_ROOT'].'adm/admuserapr.php\n\nDit is een automatisch verzonden bericht. Antwoord hier niet op.\nE-mailberichten over nieuwe gebruikers uitschakelen is mogelijk via de instelling "Waarschuwingen nieuwe gebruikers" in de beheerdersinstellingen.', '');
 			}
 
 			/* Login the new user into the forum. */
@@ -2464,7 +2481,7 @@ function email_encode($val)
 			/* If the user had changed their e-mail, force them re-confirm their account (unless admin). */
 			if ($FUD_OPT_2 & 1 && $old_email && $old_email != $uent->email && !($uent->users_opt & 1048576)) {
 				$conf_key = usr_email_unconfirm($uent->id);
-				send_email($NOTIFY_FROM, $uent->email, 'Wijziging e-mailadres bevestigen', 'Bevestig alstublieft uw nieuwe e-mailadres "'.$uent->email.'" ter vervanging van uw oude e-mailadres "'.$old_email.'" door de volgende verwijzing te volgen:\n'.$GLOBALS['WWW_ROOT'].'index.php?t=emailconf&conf_key='.$conf_key.'\n\nAls u uw nieuwe e-mailadres bevestigt, wordt uw gebruiker weer geactiveerd.', '');
+				send_email($NOTIFY_FROM, $uent->email, 'Wijziging e-mailadres bevestigen', 'Bevestig uw nieuwe e-mailadres "'.$uent->email.'" ter vervanging van uw oude e-mailadres "'.$old_email.'" door de volgende koppeling te volgen:\n'.$GLOBALS['WWW_ROOT'].'index.php?t=emailconf&conf_key='.$conf_key.'\n\nAls u uw nieuwe e-mailadres bevestigt, wordt uw gebruiker weer geactiveerd.', '');
 			}
 			if (!$mod_id) {
 				check_return($usr->returnto);
@@ -2477,7 +2494,7 @@ function email_encode($val)
 				exit;
 			}
 		} else {
-			error_dialog('Fout: het was niet mogelijk om te registreren', 'Het was niet mogelijk om uw gebruiker aan te maken. Neem alstublieft contact op met de beheerder via het e-mailadres <a href="mailto:'.$ADMIN_EMAIL.'">'.$ADMIN_EMAIL.'</a>');
+			error_dialog('Fout: het was niet mogelijk om te registreren', 'Het was niet mogelijk om uw gebruiker aan te maken. Neem contact op met de beheerder via het e-mailadres <a href="mailto:'.$ADMIN_EMAIL.'">'.$ADMIN_EMAIL.'</a>');
 		}
 	}
 
@@ -2585,7 +2602,7 @@ function email_encode($val)
 /* Print number of unread private messages in User Control Panel. */
 	if (__fud_real_user__ && $FUD_OPT_1 & 1024) {	// PM_ENABLED
 		$c = q_singleval('SELECT count(*) FROM fud30_pmsg WHERE duser_id='. _uid .' AND fldr=1 AND read_stamp=0');
-		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privébericht</a></li>';
+		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privéberichten</a></li>';
 	} else {
 		$ucp_private_msg = '';
 	}$tabs = '';
@@ -2983,7 +3000,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
@@ -3016,14 +3033,14 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<td><input type="password" name="reg_plaintext_passwd_conf" id="reg_plaintext_passwd_conf" size="25" onkeyup="passwords_match(\'reg_plaintext_passwd\', this); return false;" /></td>
 </tr>
 <tr class="RowStyleA">
-	<td>E-mailadres:'.draw_err('reg_email').'<br /><span class="SmallText">Geef alstublieft een geldig e-mailadres op. U kunt bij Voorkeuren aangeven dit te verbergen voor andere gebruikers.</span></td><td><input type="text" name="reg_email" size="25" value="'.$reg_email.'" /></td>
+	<td>E-mailadres:'.draw_err('reg_email').'<br /><span class="SmallText">Geef een geldig e-mailadres op. U kunt bij Voorkeuren aangeven dit te verbergen voor andere gebruikers.</span></td><td><input type="text" name="reg_email" size="25" value="'.$reg_email.'" /></td>
 </tr>
 <tr class="RowStyleA">
 	<td>Naam:'.draw_err('reg_name').'</td>
 	<td><input type="text" name="reg_name" size="25" value="'.$reg_name.'" /></td>
 </tr>
 '.(!($FUD_OPT_3 & 128) ? '<tr class="RowStyleA">
-	<td>Geef de onderstaande code op:'.draw_err('reg_turing').'<br /><div style="white-space: pre; font-family: Courier, monospace; color: black; background-color: #C0C0C0;">'.generate_turing_val($turing_res).'<input type="hidden" name="turing_res" value="'.$turing_res.'" /></div></td>
+	<td>Voer de onderstaande code in:'.draw_err('reg_turing').'<br /><div style="white-space: pre; font-family: Courier, monospace; color: black; background-color: #C0C0C0;">'.generate_turing_val($turing_res).'<input type="hidden" name="turing_res" value="'.$turing_res.'" /></div></td>
 	<td class="vb">
 		<input type="text" name="turing_test" value="" />
 		<span class="dn" style="display:none; visibility:hidden;">
@@ -3045,7 +3062,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<td><nobr><input type="password" name="reg_confirm_passwd" size="25" />'.(($FUD_OPT_4 & 2) && !$mod_id ? '&nbsp; <span class="SmallText">[ <a href="javascript://" onclick="window_open(\''.$GLOBALS['WWW_ROOT'].'index.php?t=rpasswd&amp;'._rsid.'\',\'rpass\',470,250);">wachtwoord wijzigen</a> ]</span>' : '' )  .'</nobr></td>
 </tr>
 <tr class="RowStyleA">
-	<td>E-mailadres:'.draw_err('reg_email').'<br /><span class="SmallText">Geef alstublieft een geldig e-mailadres op. U kunt bij Voorkeuren aangeven dit te verbergen voor andere gebruikers.</span>'.$email_warning_msg.'</td>
+	<td>E-mailadres:'.draw_err('reg_email').'<br /><span class="SmallText">Geef een geldig e-mailadres op. U kunt bij Voorkeuren aangeven dit te verbergen voor andere gebruikers.</span>'.$email_warning_msg.'</td>
 	<td><input type="text" name="reg_email" size="25" value="'.$reg_email.'" /></td>
 </tr>
 <tr class="RowStyleA">
@@ -3060,7 +3077,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<th colspan="2">Optionele gegevens</th>
 </tr>
 <tr>
-	<td colspan="2" class="RowStyleC">Het is aangewezen dat u geen persoonlijke of identificerende info weergeeft in uw profiel.  Alle info zal zichtbaar zijn voor andere forum leden.</td>
+	<td colspan="2" class="RowStyleC">We raden u aan geen persoonlijke of identificerende gegevens op te nemen in uw profiel.  Alle gegevens zijn zichtbaar voor andere forumleden.</td>
 </tr>
 <?php echo $optional_custom_fields; ?>
 <tr class="RowStyleA">
@@ -3223,7 +3240,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<td><?php echo $accept_pm; ?></td>
 </tr>
 <tr class="RowStyleA">
-	<td>Standaard ondertekening gebruiken:<br /><span class="SmallText">Voeg automatisch uw ondertekening toe aan elk geplaatst bericht.</span></td>
+	<td>Standaard ondertekening gebruiken:<br /><span class="SmallText">Voeg automatisch uw handtekening toe aan elk geplaatst bericht.</span></td>
 	<td><?php echo $append_sig_radio; ?></td>
 </tr>
 <tr class="RowStyleA">

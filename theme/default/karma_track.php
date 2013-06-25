@@ -82,7 +82,7 @@ if (_uid === '_uid') {
 	<td class="mvTc">Gebruiker</td>
 	<td class="mvTc">Waardering</td>
 	<td class="mvTc">Bericht</td>
-	<td class="mvTc">handeling</td>
+	<td class="mvTc">Handeling</td>
 </tr>
 <?php echo $table_data; ?>
 <tr>

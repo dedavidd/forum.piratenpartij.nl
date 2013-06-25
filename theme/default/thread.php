@@ -401,7 +401,7 @@ if ($frm->is_ann) {
 	<td class="RowStyleA wa"><a href="'.(empty($r[12]) ? 'index.php?t='.t_thread_view.'&amp;frm_id='.$r[7].'&amp;'._rsid : $r[12] )  .'" class="big">'.$r[10].'</a>'.($r[11] ? '<br />'.$r[11] : '').$moderators.'</td>
 	<td class="RowStyleB ac">'.(empty($r[12]) ? $r[13] : '--' )  .'</td>
 	<td class="RowStyleB ac">'.(empty($r[12]) ? $r[14] : '--' )  .'</td>
-	<td class="RowStyleA ac nw">'.(empty($r[12]) ? ($r[8] ? '<span class="DateText">'.strftime('%a, %d %B %Y', $r[2]).'</span><br />Door: '.($r[3] ? '<a href="index.php?t=usrinfo&amp;id='.$r[3].'&amp;'._rsid.'">'.$r[4].'</a>' : $GLOBALS['ANON_NICK'] ) .' <a href="index.php?t='.d_thread_view.'&amp;goto='.$r[8].'&amp;'._rsid.'#msg_'.$r[8].'"><img title="'.$r[0].'" src="theme/default/images/goto.gif" alt="'.$r[0].'" /></a>' : 'leeg' )  : '--' )  .'</td>
+	<td class="RowStyleA ac nw">'.(empty($r[12]) ? ($r[8] ? '<span class="DateText">'.strftime('%a, %d %B %Y', $r[2]).'</span><br />Door: '.($r[3] ? '<a href="index.php?t=usrinfo&amp;id='.$r[3].'&amp;'._rsid.'">'.$r[4].'</a>' : $GLOBALS['ANON_NICK'] ) .' <a href="index.php?t='.d_thread_view.'&amp;goto='.$r[8].'&amp;'._rsid.'#msg_'.$r[8].'"><img title="'.$r[0].'" src="theme/default/images/goto.gif" alt="'.$r[0].'" /></a>' : 'n.v.t.' )  : '--' )  .'</td>
 </tr>';
 	}
 	unset($c);
@@ -523,7 +523,7 @@ if (_uid) {
 		$accounts_pending_approval = '';
 	}
 	if ($is_a || $usr->group_leader_list) {
-		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groep(en) Beheerder</a>';
+		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groepsbeheerder</a>';
 	}
 
 	if ($thr_exch || $accounts_pending_approval || $group_mgr || $reported_msgs || $custom_avatar_queue || $mod_que) {
@@ -534,7 +534,7 @@ if (_uid) {
 }/* Print number of unread private messages in User Control Panel. */
 	if (__fud_real_user__ && $FUD_OPT_1 & 1024) {	// PM_ENABLED
 		$c = q_singleval('SELECT count(*) FROM fud30_pmsg WHERE duser_id='. _uid .' AND fldr=1 AND read_stamp=0');
-		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privébericht</a></li>';
+		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privéberichten</a></li>';
 	} else {
 		$ucp_private_msg = '';
 	}function tmpl_create_forum_select($frm_id, $mod)
@@ -803,7 +803,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
@@ -867,7 +867,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<th>&nbsp;</th>
 	<th class="wa">Onderwerp</th>
 	<th class="wo">Antwoorden</th>
-	<th class="wo">keer bekeken</th>
+	<th class="wo">Keer bekeken</th>
 	<th class="nw">Laatste bericht</th>
 </tr>
 <?php echo ($MOD || $mo == 8224 ? '
@@ -904,14 +904,14 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 </table>
 <?php echo tmpl_create_forum_select((isset($frm->forum_id) ? $frm->forum_id : $frm->id), $usr->users_opt & 1048576); ?>
 <?php echo (_uid ? '
-	<div class="ar SmallText">[ <a href="index.php?t=markread&amp;'._rsid.'&amp;id='.$frm->id.'&amp;SQ='.$GLOBALS['sq'].'" title="Alle ongelezen berichten in dit forum worden als gelezen gemarkeerd">alle berichten als gelezen markeren</a> ]'.($FUD_OPT_2 & 1048576 ? '&nbsp;[ <a href="index.php?t=help_index&amp;section=boardusage#syndicate">Dit forum syndiceren (XML)</a> ]
-[ <a href="feed.php?mode=m&amp;l=1&amp;basic=1&amp;frm='.$frm->id.'&amp;n=10"><img src="theme/default/images/rss.gif" title="Dit forum syndiceren (XML)" alt="RSS" /></a> ]' : '' ) .(($FUD_OPT_2 & 270532608) == 270532608 ? '&nbsp;[ <a href="'.$GLOBALS['WWW_ROOT'].'pdf.php?frm='.$frm->id.'&amp;page='.$cur_frm_page.'&amp;'._rsid.'"><img src="theme/default/images/pdf.gif" title="PDF genereren" alt="PDF" /></a> ]' : '' )  .'</div>
+	<div class="ar SmallText">[ <a href="index.php?t=markread&amp;'._rsid.'&amp;id='.$frm->id.'&amp;SQ='.$GLOBALS['sq'].'" title="Alle ongelezen berichten in dit forum worden als gelezen gemarkeerd">Alle berichten als gelezen markeren</a> ]'.($FUD_OPT_2 & 1048576 ? '&nbsp;[ <a href="index.php?t=help_index&amp;section=boardusage#syndicate">Dit forum syndiceren (XML)</a> ]
+[ <a href="feed.php?mode=m&amp;l=1&amp;basic=1&amp;frm='.$frm->id.'&amp;n=10"><img src="theme/default/images/rss.gif" title="Dit forum syndiceren (XML)" alt="RSS" /></a> ]' : '' ) .(($FUD_OPT_2 & 270532608) == 270532608 ? '&nbsp;[ <a href="'.$GLOBALS['WWW_ROOT'].'pdf.php?frm='.$frm->id.'&amp;page='.$cur_frm_page.'&amp;'._rsid.'"><img src="theme/default/images/pdf.gif" title="PDF maken" alt="PDF" /></a> ]' : '' )  .'</div>
 ' : '
-	<div class="ar SmallText">'.(($FUD_OPT_2 & 270532608) == 270532608 ? '&nbsp;[ <a href="'.$GLOBALS['WWW_ROOT'].'pdf.php?frm='.$frm->id.'&amp;page='.$cur_frm_page.'&amp;'._rsid.'"><img src="theme/default/images/pdf.gif" title="PDF genereren" alt="PDF" /></a> ]' : '' ) .($FUD_OPT_2 & 1048576 ? '&nbsp;[ <a href="index.php?t=help_index&amp;section=boardusage#syndicate">Dit forum syndiceren (XML)</a> ]
+	<div class="ar SmallText">'.(($FUD_OPT_2 & 270532608) == 270532608 ? '&nbsp;[ <a href="'.$GLOBALS['WWW_ROOT'].'pdf.php?frm='.$frm->id.'&amp;page='.$cur_frm_page.'&amp;'._rsid.'"><img src="theme/default/images/pdf.gif" title="PDF maken" alt="PDF" /></a> ]' : '' ) .($FUD_OPT_2 & 1048576 ? '&nbsp;[ <a href="index.php?t=help_index&amp;section=boardusage#syndicate">Dit forum syndiceren (XML)</a> ]
 [ <a href="feed.php?mode=m&amp;l=1&amp;basic=1&amp;frm='.$frm->id.'&amp;n=10"><img src="theme/default/images/rss.gif" title="Dit forum syndiceren (XML)" alt="RSS" /></a> ]' : '' )  .'</div>
 '); ?>
 <fieldset>
-	<legend>Legenda:</legend>
+	<legend>Legenda</legend>
 	<img src="theme/default/images/unread<?php echo img_ext; ?>" alt="Nieuwe berichten" />&nbsp;Nieuwe berichten&nbsp;&nbsp;
 	<img src="theme/default/images/read<?php echo img_ext; ?>" alt="Geen nieuwe berichten" />&nbsp;Geen nieuwe berichten&nbsp;&nbsp;
 	<img src="theme/default/images/unreadlocked<?php echo img_ext; ?>" alt="Gesloten (met ongelezen berichten)" />&nbsp;Gesloten (met ongelezen berichten)&nbsp;&nbsp;

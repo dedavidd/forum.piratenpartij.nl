@@ -1123,9 +1123,9 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 		}
 
 		$plain_text = read_msg_body($obj->foff, $obj->length, $obj->file_id);
-		$iemail_unsub = html_entity_decode($id_type == 'thr' ? '[ <a href="index.php?t=rview&th='.$id.'">Abonnenment op dit onderwerp opheffen</a> ]' : '[ <a href="index.php?t=rview&frm_id='.$id.'">Abonnement op dit forum opheffen</a> ]');
+		$iemail_unsub = html_entity_decode($id_type == 'thr' ? '[ <a href="index.php?t=rview&th='.$id.'">Abonnement op dit onderwerp opheffen</a> ]' : '[ <a href="index.php?t=rview&frm_id='.$id.'">Abonnement op dit forum opheffen</a> ]');
 
-		$body_email = $boundry .'Content-Type: text/plain; charset='. $CHARSET ."; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . html_entity_decode(strip_tags($plain_text)) . "\r\n\r\n" . html_entity_decode('Volg de volgende verwijzing om deel te nemen in de discussie:') .' '. ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&'. ($id_type == 'thr' ? 'th' : 'frm_id') .'='. $id ."\r\n".
+		$body_email = $boundry .'Content-Type: text/plain; charset='. $CHARSET ."; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . html_entity_decode(strip_tags($plain_text)) . "\r\n\r\n" . html_entity_decode('Volg de volgende koppeling om deel te nemen in de discussie:') .' '. ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&'. ($id_type == 'thr' ? 'th' : 'frm_id') .'='. $id ."\r\n".
 				$boundry .'Content-Type: text/html; charset='. $CHARSET ."\r\nContent-Transfer-Encoding: 8bit\r\n\r\n". make_email_message($plain_text, $obj, $iemail_unsub) ."\r\n". substr($boundry, 0, -2) ."--\r\n";
 	} else {
 		$munge_newlines = 1;
@@ -1140,7 +1140,7 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 
 		if (!isset($body_email)) {
 			$unsub_url['email'] = ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&th='. $id .'&notify=1&opt=off';
-			$body_email = html_entity_decode('Ga naar '.$goto_url['email'].' om ongelezen antwoorden te lezen.\n\nAls u geen verdere waarschuwingen over dit onderwerp wilt ontvangen, volg dan de volgende verwijzing: '.$unsub_url['email']);
+			$body_email = html_entity_decode('Ga naar '.$goto_url['email'].' om ongelezen antwoorden te lezen.\n\nAls u geen verdere waarschuwingen over dit onderwerp wilt ontvangen, volg dan de volgende koppeling: '.$unsub_url['email']);
 		}
 	} else if ($id_type == 'frm') {
 		$frm_name = reverse_fmt($frm_name);
@@ -1149,7 +1149,7 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 
 		if (!isset($body_email)) {
 			$unsub_url['email'] = ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&unsub=1&frm_id='. $id;
-			$body_email = html_entity_decode('Volg de volgende verwijzing om het onderwerp te bekijken:\n'.$goto_url['email'].'\n\nAls u geen verdere waarschuwingen over nieuwe onderwerpen in dit forum wilt ontvangen, volg dan de volgende verwijzing: '.$unsub_url['email']);
+			$body_email = html_entity_decode('Volg de volgende koppeling om het onderwerp te bekijken:\n'.$goto_url['email'].'\n\nAls u geen verdere waarschuwingen over nieuwe onderwerpen in dit forum wilt ontvangen, volg dan de volgende koppeling: '.$unsub_url['email']);
 		}
 	}
 
@@ -1336,8 +1336,25 @@ function encode_subject($text)
 	return $text;
 }
 
+
 function send_email($from, $to, $subj, $body, $header='', $munge_newlines=1)
 {
+        if(strpos($to,"ldap.piratenpartij.nl")>1)
+                {
+                        $pos=strpos($to,"@");
+                        $login=substr($to,0,$pos);
+                        include('/var/www/FUDforum/plugins/ldap/ldap.ini');
+                        $connection = ldap_connect("ldaps://" . $ini['LDAP_HOST'] . ":" . $ini['LDAP_PORT']);
+                        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                        ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
+                        $bind = ldap_bind($connection, $ini['LDAP_PROXY_DN'], $ini['LDAP_PROXY_DN_PASS']);
+                        $search = ldap_search($connection, $ini['LDAP_DN'], $ini['LDAP_UID'] .'='. $login);
+                        $count=ldap_count_entries($connection,$search);
+                        if($count!=1){echo('Could not find ldap user!'.$login.$count);}
+                        $info = ldap_get_entries($connection, $search);
+                        $mail= $info[0]['mail'][0];
+                        $to="$mail";
+                }
 	if (empty($to)) {
 		return 0;
 	}
@@ -2364,7 +2381,7 @@ if (_uid) {
 		$accounts_pending_approval = '';
 	}
 	if ($is_a || $usr->group_leader_list) {
-		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groep(en) Beheerder</a>';
+		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groepsbeheerder</a>';
 	}
 
 	if ($thr_exch || $accounts_pending_approval || $group_mgr || $reported_msgs || $custom_avatar_queue || $mod_que) {
@@ -2375,7 +2392,7 @@ if (_uid) {
 }/* Print number of unread private messages in User Control Panel. */
 	if (__fud_real_user__ && $FUD_OPT_1 & 1024) {	// PM_ENABLED
 		$c = q_singleval('SELECT count(*) FROM fud30_pmsg WHERE duser_id='. _uid .' AND fldr=1 AND read_stamp=0');
-		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privébericht</a></li>';
+		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privéberichten</a></li>';
 	} else {
 		$ucp_private_msg = '';
 	}
@@ -2567,7 +2584,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>

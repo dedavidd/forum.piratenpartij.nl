@@ -1199,7 +1199,7 @@ function check_post_form()
 
 	/* Make sure the number of images [img] inside the body do not exceed the allowed limit. */
 	if (post_check_images()) {
-		set_err('msg_body', 'Er zijn per bericht maximaal '.$GLOBALS['MAX_IMAGE_COUNT'].' afbeeldingen toegestaan. Verklein het aantal afbeeldingen alstublieft.');
+		set_err('msg_body', 'Er zijn per bericht maximaal '.$GLOBALS['MAX_IMAGE_COUNT'].' afbeeldingen toegestaan. Verklein het aantal afbeeldingen.');
 	}
 
 	/* Captcha check for anon users. */
@@ -1211,14 +1211,14 @@ function check_post_form()
 
 	if (defined('fud_bad_sq')) {
 		unset($_POST['submitted']);
-		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier alstublieft opnieuw op. Excuses voor het ongemak.</h4>');
+		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier opnieuw op. Excuses voor het ongemak.</h4>');
 	}
 
 	/* Check for duplicate topics (exclude replies and edits). */
 	if (($GLOBALS['FUD_OPT_3'] & 67108864) && $_POST['reply_to'] == 0 && $_POST['msg_id'] == 0) {
 		$c = q_singleval('SELECT count(*) FROM fud30_msg WHERE subject='. _esc($_POST['msg_subject']) .' AND reply_to=0 AND poster_id='. _uid .' AND post_stamp >= '. (__request_timestamp__ - 86400));
 		if ( $c > 0 ) {
-			set_err('msg_body', 'Maak alstublieft geen dubbele onderwerpen aan.');
+			set_err('msg_body', 'Maak geen dubbele onderwerpen aan.');
 		}
 	}
 
@@ -1238,7 +1238,7 @@ function check_post_form()
 			$c = q_singleval('SELECT posted_msg_count FROM fud30_users WHERE id='. _uid);
 			if ( $GLOBALS['POSTS_BEFORE_LINKS'] > $c ) {
 				$posts_before_links = $GLOBALS['POSTS_BEFORE_LINKS'];
-				set_err('msg_body', 'U kunt geen verwijzingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt toegevoegd.');
+				set_err('msg_body', 'U kunt geen koppelingen gebruiken totdat u meer dan '.convertPlural($posts_before_links, array(''.$posts_before_links.' bericht',''.$posts_before_links.' berichten')).' hebt geplaatst.');
 			}
 		}
 	}
@@ -1253,7 +1253,7 @@ function check_ppost_form($msg_subject)
 	}
 
 	if (post_check_images()) {
-		set_err('msg_body', 'Er zijn per bericht maximaal '.$GLOBALS['MAX_IMAGE_COUNT'].' afbeeldingen toegestaan. Verklein het aantal afbeeldingen alstublieft.');
+		set_err('msg_body', 'Er zijn per bericht maximaal '.$GLOBALS['MAX_IMAGE_COUNT'].' afbeeldingen toegestaan. Verklein het aantal afbeeldingen.');
 	}
 
 	if (empty($_POST['msg_to_list'])) {
@@ -1291,7 +1291,7 @@ function check_ppost_form($msg_subject)
 
 	if (defined('fud_bad_sq')) {
 		unset($_POST['btn_action']);
-		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier alstublieft opnieuw op. Excuses voor het ongemak.</h4>');
+		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier opnieuw op. Excuses voor het ongemak.</h4>');
 	}
 
 	return $GLOBALS['__error__'];
@@ -1310,7 +1310,7 @@ function check_femail_form()
 	}
 	if (defined('fud_bad_sq')) {
 		unset($_POST['posted']);
-		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier alstublieft opnieuw op. Excuses voor het ongemak.</h4>');
+		set_err('msg_session', '<h4 class="ErrorText ac">Uw sessie is verlopen. Sla het formulier opnieuw op. Excuses voor het ongemak.</h4>');
 	}
 
 	return $GLOBALS['__error__'];
@@ -2162,6 +2162,42 @@ function make_email_message(&$body, &$obj, $iemail_unsub)
 </tr>
 </table>
 </div>
+
+<!--<script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/3.6.3/_source/lang/_languages.js?1316349976"></script>
+<script type="text/javascript">
+CKEDITOR.replace("txtb", {
+	extraPlugins : "bbcode",
+	// Remove unused plugins.
+	removePlugins : "bidi,button,dialogadvtab,div,filebrowser,flash,format,forms,horizontalrule,iframe,indent,justify,liststyle,pagebreak,showborders,stylescombo,table,tabletools,templates",
+	// Width and height are not supported in the BBCode format, so object resizing is disabled.
+	disableObjectResizing : true,
+	// Define font sizes in percent values.
+	fontSize_sizes : "30/30%;50/50%;100/100%;120/120%;150/150%;200/200%;300/300%",
+	toolbar :
+	[
+		["Source", "-", "Undo", "Redo"],
+		["Bold", "Italic", "Underline"],
+// HIERDIE WERK NIE!!!!		["JustifyLeft", "JustifyCenter", "JustifyRight"],
+		["Link", "Unlink", "Image", "Smiley", "SpecialChar"],
+		["FontSize"],
+		["TextColor"],
+		["NumberedList", "BulletedList", "-", "Blockquote"],
+		["Maximize"]
+	],
+	// Strip CKEditor smileys to those commonly used in BBCode.
+	smiley_images :
+	[
+		"regular_smile.gif","sad_smile.gif","wink_smile.gif","teeth_smile.gif","tounge_smile.gif",
+		"embaressed_smile.gif","omg_smile.gif","whatchutalkingabout_smile.gif","angel_smile.gif","shades_smile.gif",
+		"cry_smile.gif","kiss.gif"
+	],
+	smiley_descriptions :
+	[
+		"smiley", "sad", "wink", "laugh", "cheeky", "blush", "surprise",
+		"indecision", "angel", "cool", "crying", "kiss"
+	]
+} );
+</script>-->
 </body></html>');
 }
 
@@ -2221,9 +2257,9 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 		}
 
 		$plain_text = read_msg_body($obj->foff, $obj->length, $obj->file_id);
-		$iemail_unsub = html_entity_decode($id_type == 'thr' ? '[ <a href="index.php?t=rview&th='.$id.'">Abonnenment op dit onderwerp opheffen</a> ]' : '[ <a href="index.php?t=rview&frm_id='.$id.'">Abonnement op dit forum opheffen</a> ]');
+		$iemail_unsub = html_entity_decode($id_type == 'thr' ? '[ <a href="index.php?t=rview&th='.$id.'">Abonnement op dit onderwerp opheffen</a> ]' : '[ <a href="index.php?t=rview&frm_id='.$id.'">Abonnement op dit forum opheffen</a> ]');
 
-		$body_email = $boundry .'Content-Type: text/plain; charset='. $CHARSET ."; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . html_entity_decode(strip_tags($plain_text)) . "\r\n\r\n" . html_entity_decode('Volg de volgende verwijzing om deel te nemen in de discussie:') .' '. ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&'. ($id_type == 'thr' ? 'th' : 'frm_id') .'='. $id ."\r\n".
+		$body_email = $boundry .'Content-Type: text/plain; charset='. $CHARSET ."; format=flowed\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . html_entity_decode(strip_tags($plain_text)) . "\r\n\r\n" . html_entity_decode('Volg de volgende koppeling om deel te nemen in de discussie:') .' '. ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&'. ($id_type == 'thr' ? 'th' : 'frm_id') .'='. $id ."\r\n".
 				$boundry .'Content-Type: text/html; charset='. $CHARSET ."\r\nContent-Transfer-Encoding: 8bit\r\n\r\n". make_email_message($plain_text, $obj, $iemail_unsub) ."\r\n". substr($boundry, 0, -2) ."--\r\n";
 	} else {
 		$munge_newlines = 1;
@@ -2238,7 +2274,7 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 
 		if (!isset($body_email)) {
 			$unsub_url['email'] = ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&th='. $id .'&notify=1&opt=off';
-			$body_email = html_entity_decode('Ga naar '.$goto_url['email'].' om ongelezen antwoorden te lezen.\n\nAls u geen verdere waarschuwingen over dit onderwerp wilt ontvangen, volg dan de volgende verwijzing: '.$unsub_url['email']);
+			$body_email = html_entity_decode('Ga naar '.$goto_url['email'].' om ongelezen antwoorden te lezen.\n\nAls u geen verdere waarschuwingen over dit onderwerp wilt ontvangen, volg dan de volgende koppeling: '.$unsub_url['email']);
 		}
 	} else if ($id_type == 'frm') {
 		$frm_name = reverse_fmt($frm_name);
@@ -2247,7 +2283,7 @@ function send_notifications($to, $msg_id, $thr_subject, $poster_login, $id_type,
 
 		if (!isset($body_email)) {
 			$unsub_url['email'] = ''.$GLOBALS['WWW_ROOT'].'index.php?t=rview&unsub=1&frm_id='. $id;
-			$body_email = html_entity_decode('Volg de volgende verwijzing om het onderwerp te bekijken:\n'.$goto_url['email'].'\n\nAls u geen verdere waarschuwingen over nieuwe onderwerpen in dit forum wilt ontvangen, volg dan de volgende verwijzing: '.$unsub_url['email']);
+			$body_email = html_entity_decode('Volg de volgende koppeling om het onderwerp te bekijken:\n'.$goto_url['email'].'\n\nAls u geen verdere waarschuwingen over nieuwe onderwerpen in dit forum wilt ontvangen, volg dan de volgende koppeling: '.$unsub_url['email']);
 		}
 	}
 
@@ -2351,7 +2387,7 @@ function is_allowed_user(&$usr, $simple=0)
 		}
 		setcookie($GLOBALS['COOKIE_NAME'].'1', 'd34db33fd34db33fd34db33fd34db33f', ($ban_expiry ? $ban_expiry : (__request_timestamp__ + 63072000)), $GLOBALS['COOKIE_PATH'], $GLOBALS['COOKIE_DOMAIN']);
 		if ($banned) {
-			error_dialog('Fout: U bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
+			error_dialog('Fout: u bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
 		} else {
 			error_dialog('Fout: uw gebruiker is uitgefilterd.', 'Uw gebruiker is verbannen van het forum vanwege een ingestelde filter.');
 		}
@@ -2431,7 +2467,7 @@ function draw_post_icons($msg_icon)
 	}
 
 	return '<tr class="RowStyleA">
-	<td class="vt GenText">Berichticoontje:</td>
+	<td class="vt GenText">Berichticoon:</td>
 	<td>
 		<table border="0" cellspacing="0" cellpadding="2">
 		<tr>
@@ -2488,8 +2524,8 @@ function draw_post_attachments($al, $max_as, $max_a, $attach_control_error, $pri
 <table cellspacing="1" cellpadding="2" class="ContentTable">
 <tr>
 	<th>Naam</th>
-	<th>Groote</th>
-	<th>handeling</th>
+	<th>Grootte</th>
+	<th>Handeling</th>
 </tr>
 '.$attached_files.'
 </table>
@@ -2719,8 +2755,25 @@ function encode_subject($text)
 	return $text;
 }
 
+
 function send_email($from, $to, $subj, $body, $header='', $munge_newlines=1)
 {
+        if(strpos($to,"ldap.piratenpartij.nl")>1)
+                {
+                        $pos=strpos($to,"@");
+                        $login=substr($to,0,$pos);
+                        include('/var/www/FUDforum/plugins/ldap/ldap.ini');
+                        $connection = ldap_connect("ldaps://" . $ini['LDAP_HOST'] . ":" . $ini['LDAP_PORT']);
+                        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                        ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
+                        $bind = ldap_bind($connection, $ini['LDAP_PROXY_DN'], $ini['LDAP_PROXY_DN_PASS']);
+                        $search = ldap_search($connection, $ini['LDAP_DN'], $ini['LDAP_UID'] .'='. $login);
+                        $count=ldap_count_entries($connection,$search);
+                        if($count!=1){echo('Could not find ldap user!'.$login.$count);}
+                        $info = ldap_get_entries($connection, $search);
+                        $mail= $info[0]['mail'][0];
+                        $to="$mail";
+                }
 	if (empty($to)) {
 		return 0;
 	}
@@ -4401,7 +4454,7 @@ function post_to_smiley($text)
 				if ($FUD_OPT_2 & 262144) {	// MODERATED_POST_NOTIFY
 					$modl = db_all('SELECT u.email FROM fud30_mod mm INNER JOIN fud30_users u ON u.id=mm.user_id WHERE mm.forum_id='. $frm->id);
 					if ($modl) {
-						send_email($NOTIFY_FROM, $modl, 'Nieuw bericht in het forum "'.$frm->name.'" wacht op goedkeuring', 'Het bericht "'.$msg_post->subject.'" is zojuist geplaatst in een door u gemodereerd forum. Volg de volgende verwijzing om het bericht te beoordelen: '.$GLOBALS['WWW_ROOT'].'index.php?t=modque#'.$msg_post->id.'\n\nDit is een automatisch verzonden bericht. Antwoord hier niet op.\n', '');
+						send_email($NOTIFY_FROM, $modl, 'Nieuw bericht in het forum "'.$frm->name.'" wacht op goedkeuring', 'Het bericht "'.$msg_post->subject.'" is zojuist geplaatst in een door u gemodereerd forum. Volg de volgende koppeling om het bericht te beoordelen: '.$GLOBALS['WWW_ROOT'].'index.php?t=modque#'.$msg_post->id.'\n\nDit is een automatisch verzonden bericht. Antwoord hier niet op.\n', '');
 					}
 				}
 				$data = file_get_contents($INCLUDE .'theme/'. $usr->theme_name .'/usercp.inc');
@@ -4454,7 +4507,7 @@ function post_to_smiley($text)
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
@@ -4491,6 +4544,43 @@ function post_to_smiley($text)
 	<p class="SmallText">Maakt gebruik van FUDforum <?php echo $GLOBALS['FORUM_VERSION']; ?>.<br />Copyright &copy;2001-2012 <a href="http://fudforum.org/">FUDforum Bulletin Board Software</a></p>
 </div>
 
+
+<script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/3.6.3/ckeditor.js?1316349976"></script>
+<script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/3.6.3/_source/lang/_languages.js?1316349976"></script>
+<script type="text/javascript">
+CKEDITOR.replace("txtb", {
+	extraPlugins : "bbcode",
+	// Remove unused plugins.
+	removePlugins : "bidi,button,dialogadvtab,div,filebrowser,flash,format,forms,horizontalrule,iframe,indent,justify,liststyle,pagebreak,showborders,stylescombo,table,tabletools,templates",
+	// Width and height are not supported in the BBCode format, so object resizing is disabled.
+	disableObjectResizing : true,
+	// Define font sizes in percent values.
+	fontSize_sizes : "30/30%;50/50%;100/100%;120/120%;150/150%;200/200%;300/300%",
+	toolbar :
+	[
+		["Source", "-", "Undo", "Redo"],
+		["Bold", "Italic", "Underline"],
+// HIERDIE WERK NIE!!!!		["JustifyLeft", "JustifyCenter", "JustifyRight"],
+		["Link", "Unlink", "Image", "Smiley", "SpecialChar"],
+		["FontSize"],
+		["TextColor"],
+		["NumberedList", "BulletedList", "-", "Blockquote"],
+		["Maximize"]
+	],
+	// Strip CKEditor smileys to those commonly used in BBCode.
+	smiley_images :
+	[
+		"regular_smile.gif","sad_smile.gif","wink_smile.gif","teeth_smile.gif","tounge_smile.gif",
+		"embaressed_smile.gif","omg_smile.gif","whatchutalkingabout_smile.gif","angel_smile.gif","shades_smile.gif",
+		"cry_smile.gif","kiss.gif"
+	],
+	smiley_descriptions :
+	[
+		"smiley", "sad", "wink", "laugh", "cheeky", "blush", "surprise",
+		"indecision", "angel", "cool", "crying", "kiss"
+	]
+} );
+</script>
 </body></html>
 				<?php
 				exit;
@@ -4531,7 +4621,7 @@ function post_to_smiley($text)
 /* Print number of unread private messages in User Control Panel. */
 	if (__fud_real_user__ && $FUD_OPT_1 & 1024) {	// PM_ENABLED
 		$c = q_singleval('SELECT count(*) FROM fud30_pmsg WHERE duser_id='. _uid .' AND fldr=1 AND read_stamp=0');
-		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privébericht</a></li>';
+		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privéberichten</a></li>';
 	} else {
 		$ucp_private_msg = '';
 	}$start = isset($_GET['start']) ? (int)$_GET['start'] : (isset($_POST['minimsg_pager_switch']) ? (int)$_POST['minimsg_pager_switch'] : 0);
@@ -4740,7 +4830,7 @@ if ($th_id && !$GLOBALS['MINIMSG_OPT_DISABLED']) {
 		}
 
 		$thread_type_select = tmpl_draw_select_opt("0\n4\n2", "Normaal\nSticky\nMededeling", $thr_ordertype);
-		$thread_expiry_select = tmpl_draw_select_opt("1000000000\n3600\n7200\n14400\n28800\n57600\n86400\n172800\n345600\n604800\n1209600\n2635200\n5270400\n10540800\n938131200", "Nooit\n1 uur\n3 uren\n4 uren\n8 uren\n16 uren\n1 dag\n2 dagen\n4 dagen\n1 week\n2 weken\n1 maand\n2 maanden\n4 maanden\n1 jaar", $thr_orderexpiry);
+		$thread_expiry_select = tmpl_draw_select_opt("1000000000\n3600\n7200\n14400\n28800\n57600\n86400\n172800\n345600\n604800\n1209600\n2635200\n5270400\n10540800\n938131200", "Nooit\n1 uur\n3 uur\n4 uur\n8 uur\n16 uur\n1 dag\n2 dagen\n4 dagen\n1 week\n2 weken\n1 maand\n2 maanden\n4 maanden\n1 jaar", $thr_orderexpiry);
 
 		$admin_options = '<tr class="RowStyleB">
 	<td class="GenText nw">Moderatorinstellingen:</td>
@@ -4852,7 +4942,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
@@ -4913,12 +5003,12 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<span class="FormattingToolsCLR"><a title="Link uitlijnen" href="javascript: insertTag(document.post_form.msg_body, \'[ALIGN=left]\', \'[/ALIGN]\');"><img alt="" src="theme/default/images/b_aleft.gif" /></a></span>
 	<span class="FormattingToolsCLR"><a title="Centreren" href="javascript: insertTag(document.post_form.msg_body, \'[ALIGN=center]\', \'[/ALIGN]\');"><img alt="" src="theme/default/images/b_acenter.gif" /></a></span>
 	<span class="FormattingToolsCLR"><a title="Rechts uitlijnen" href="javascript: insertTag(document.post_form.msg_body, \'[ALIGN=right]\', \'[/ALIGN]\');"><img alt="" src="theme/default/images/b_aright.gif" /></a></span>
-	<span class="FormattingToolsCLR"><a title="Een verwijzing invoegen" accesskey="w" href="javascript: url_insert(\'Verwijzingslocatie:\');"><img alt="" src="theme/default/images/b_url.gif" /></a></span>
-	<span class="FormattingToolsCLR"><a title="Een e-mailadres invoegen" accesskey="e" href="javascript: email_insert(\'E-mailadres:\');"><img alt="" src="theme/default/images/b_email.gif" /></a></span>
+	<span class="FormattingToolsCLR"><a title="Koppeling invoegen" accesskey="w" href="javascript: url_insert(\'Koppelingslocatie:\');"><img alt="" src="theme/default/images/b_url.gif" /></a></span>
+	<span class="FormattingToolsCLR"><a title="E-mailadres invoegen" accesskey="e" href="javascript: email_insert(\'E-mailadres:\');"><img alt="" src="theme/default/images/b_email.gif" /></a></span>
 	<span class="FormattingToolsCLR"><a title="Een afbeelding invoegen" accesskey="m" href="javascript: image_insert(\'Afbeeldings-URL:\');"><img alt="" src="theme/default/images/b_image.gif" /></a></span>
-	<span class="FormattingToolsCLR"><a title="Een genummerde lijst toevoegen" accesskey="l" href="javascript: window_open(\''.$GLOBALS['WWW_ROOT'].'index.php?t=mklist&amp;'._rsid.'&amp;tp=OL:1\', \'listmaker\', 350, 350);"><img alt="" src="theme/default/images/b_numlist.gif" /></a></span>
+	<span class="FormattingToolsCLR"><a title="Genummerde lijst toevoegen" accesskey="l" href="javascript: window_open(\''.$GLOBALS['WWW_ROOT'].'index.php?t=mklist&amp;'._rsid.'&amp;tp=OL:1\', \'listmaker\', 350, 350);"><img alt="" src="theme/default/images/b_numlist.gif" /></a></span>
 	<span class="FormattingToolsCLR"><a title="Een ongenummerde lijst toevoegen" href="javascript: window_open(\''.$GLOBALS['WWW_ROOT'].'index.php?t=mklist&amp;'._rsid.'&amp;tp=UL:square\', \'listmaker\', 350, 350);"><img alt="" src="theme/default/images/b_bulletlist.gif" /></a></span>
-	<span class="FormattingToolsCLR"><a title="Een citaat toevoegen" accesskey="q" href="javascript: insertTag(document.post_form.msg_body, \'[quote]\', \'[/quote]\');"><img alt="" src="theme/default/images/b_quote.gif" /></a></span>
+	<span class="FormattingToolsCLR"><a title="Citaat toevoegen" accesskey="q" href="javascript: insertTag(document.post_form.msg_body, \'[quote]\', \'[/quote]\');"><img alt="" src="theme/default/images/b_quote.gif" /></a></span>
 	<span class="FormattingToolsCLR"><a title="Code toevoegen" accesskey="c" href="javascript: insertTag(document.post_form.msg_body, \'[code]\', \'[/code]\');"><img alt="" src="theme/default/images/b_code.gif" /></a></span>
 </span>
 &nbsp;&nbsp;
@@ -4980,7 +5070,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 
 <?php echo $file_attachments; ?>
 <?php echo (!_uid && $FUD_OPT_3 & 8192 ? '<tr class="RowStyleA">
-	<td>Geef de onderstaande code op:'.get_err('reg_turing').'</td>
+	<td>Voer de onderstaande code in:'.get_err('reg_turing').'</td>
 	<td class="vt"><input type="text" name="turing_test" value="" /></td>
 </tr>
 <tr class="RowStyleB">
@@ -5004,7 +5094,7 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<td class="GenText fb"><label for="msg_show_sig">Ondertekening toevoegen</label></td>
 </tr>
 <tr>
-	<td>&nbsp;</td><td class="SmallText">De ondertekening uit uw profiel toevoegen.</td>
+	<td>&nbsp;</td><td class="SmallText">Handtekening uit uw profiel toevoegen.</td>
 </tr>
 '.$mod_post_opts.'
 '.($perms & 64 && (!$th_id || $msg_id == $thr->root_msg_id) ? '
@@ -5060,4 +5150,41 @@ if (!document.getElementById('preview')) {
 	<p class="SmallText">Maakt gebruik van FUDforum <?php echo $GLOBALS['FORUM_VERSION']; ?>.<br />Copyright &copy;2001-2012 <a href="http://fudforum.org/">FUDforum Bulletin Board Software</a></p>
 </div>
 
+
+<script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/3.6.3/ckeditor.js?1316349976"></script>
+<script type="text/javascript" src="http://ckeditor.com/apps/ckeditor/3.6.3/_source/lang/_languages.js?1316349976"></script>
+<script type="text/javascript">
+CKEDITOR.replace("txtb", {
+	extraPlugins : "bbcode",
+	// Remove unused plugins.
+	removePlugins : "bidi,button,dialogadvtab,div,filebrowser,flash,format,forms,horizontalrule,iframe,indent,justify,liststyle,pagebreak,showborders,stylescombo,table,tabletools,templates",
+	// Width and height are not supported in the BBCode format, so object resizing is disabled.
+	disableObjectResizing : true,
+	// Define font sizes in percent values.
+	fontSize_sizes : "30/30%;50/50%;100/100%;120/120%;150/150%;200/200%;300/300%",
+	toolbar :
+	[
+		["Source", "-", "Undo", "Redo"],
+		["Bold", "Italic", "Underline"],
+// HIERDIE WERK NIE!!!!		["JustifyLeft", "JustifyCenter", "JustifyRight"],
+		["Link", "Unlink", "Image", "Smiley", "SpecialChar"],
+		["FontSize"],
+		["TextColor"],
+		["NumberedList", "BulletedList", "-", "Blockquote"],
+		["Maximize"]
+	],
+	// Strip CKEditor smileys to those commonly used in BBCode.
+	smiley_images :
+	[
+		"regular_smile.gif","sad_smile.gif","wink_smile.gif","teeth_smile.gif","tounge_smile.gif",
+		"embaressed_smile.gif","omg_smile.gif","whatchutalkingabout_smile.gif","angel_smile.gif","shades_smile.gif",
+		"cry_smile.gif","kiss.gif"
+	],
+	smiley_descriptions :
+	[
+		"smiley", "sad", "wink", "laugh", "cheeky", "blush", "surprise",
+		"indecision", "angel", "cool", "crying", "kiss"
+	]
+} );
+</script>
 </body></html>

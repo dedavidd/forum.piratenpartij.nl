@@ -867,7 +867,7 @@ if (_uid) {
 		$accounts_pending_approval = '';
 	}
 	if ($is_a || $usr->group_leader_list) {
-		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groep(en) Beheerder</a>';
+		$group_mgr = '| <a href="index.php?t=groupmgr&amp;'._rsid.'">Groepsbeheerder</a>';
 	}
 
 	if ($thr_exch || $accounts_pending_approval || $group_mgr || $reported_msgs || $custom_avatar_queue || $mod_que) {
@@ -878,7 +878,7 @@ if (_uid) {
 }/* Print number of unread private messages in User Control Panel. */
 	if (__fud_real_user__ && $FUD_OPT_1 & 1024) {	// PM_ENABLED
 		$c = q_singleval('SELECT count(*) FROM fud30_pmsg WHERE duser_id='. _uid .' AND fldr=1 AND read_stamp=0');
-		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privébericht"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privébericht</a></li>';
+		$ucp_private_msg = $c ? '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> U hebt <span class="GenTextRed">('.$c.')</span> ongelezen '.convertPlural($c, array('privébericht','privéberichten')).'</a></li>' : '<li><a href="index.php?t=pmsg&amp;'._rsid.'" title="Privéberichten"><img src="theme/default/images/top_pm'.img_ext.'" alt="" /> Privéberichten</a></li>';
 	} else {
 		$ucp_private_msg = '';
 	}
@@ -1064,17 +1064,17 @@ if ($FUD_OPT_2 & 2 || $is_a) {	// PUBLIC_STATS is enabled or Admin user.
 	<?php echo ($FUD_OPT_3 & 536870912 ? '<li><a href="index.php?t=page&amp;'._rsid.'" title="Pagina&#39;s"><img src="theme/default/images/pages'.img_ext.'" alt="" /> Pagina&#39;s</a></li>' : ''); ?>
 	<?php echo ($FUD_OPT_1 & 16777216 ? ' <li><a href="index.php?t=search'.(isset($frm->forum_id) ? '&amp;forum_limiter='.(int)$frm->forum_id.'' : '' )  .'&amp;'._rsid.'" title="Zoeken"><img src="theme/default/images/top_search'.img_ext.'" alt="" /> Zoeken</a></li>' : ''); ?>
 	<li><a accesskey="h" href="index.php?t=help_index&amp;<?php echo _rsid; ?>" title="Hulp"><img src="theme/default/images/top_help<?php echo img_ext; ?>" alt="" /> Hulp</a></li>
-	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Profiel</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
+	<?php echo (__fud_real_user__ ? '<li><a href="index.php?t=uc&amp;'._rsid.'" title="Gebruikersbeheer"><img src="theme/default/images/top_profile'.img_ext.'" alt="" /> Configuratiescherm</a></li>' : ($FUD_OPT_1 & 2 ? '<li><a href="index.php?t=register&amp;'._rsid.'" title="Registreren"><img src="theme/default/images/top_register'.img_ext.'" alt="" /> Registreren</a></li>' : '')).'
 	'.(__fud_real_user__ ? '<li><a href="index.php?t=login&amp;'._rsid.'&amp;logout=1&amp;SQ='.$GLOBALS['sq'].'" title="Afmelden"><img src="theme/default/images/top_logout'.img_ext.'" alt="" /> Afmelden [ '.$usr->alias.' ]</a></li>' : '<li><a href="index.php?t=login&amp;'._rsid.'" title="Aanmelden"><img src="theme/default/images/top_login'.img_ext.'" alt="" /> Aanmelden</a></li>'); ?>
 	<li><a href="index.php?t=index&amp;<?php echo _rsid; ?>" title="Startpagina"><img src="theme/default/images/top_home<?php echo img_ext; ?>" alt="" /> Startpagina</a></li>
 	<?php echo ($is_a || ($usr->users_opt & 268435456) ? '<li><a href="adm/index.php?S='.s.'&amp;SQ='.$GLOBALS['sq'].'" title="Beheer"><img src="theme/default/images/top_admin'.img_ext.'" alt="" /> Beheer</a></li>' : ''); ?>
 </ul>
 </div>
-<a href="index.php?<?php echo $dt_opt; ?>" title="Berichtenfilter &#39;vandaag&#39; wisselen (geeft alleen berichten van vandaag weer)">Berichten van vandaag <?php echo (isset($_GET['date']) ? '<span class="selmsgInd">(<span class="GenTextRed">Aan</span>)</span>' : '<span class="selmsgInd">(Uit)</span>' )  .'</a>
-'.(_uid ? '&nbsp;| <a href="index.php?'.$un_opt.'" title="Zet de &quot;ongelezen berichten&quot; filter aan (dit laat enkel de ongelezen berichten zien)">Ongelezen berichten '.(isset($_GET['unread']) ? '<span class="selmsgInd">(<span class="GenTextRed">Aan</span>)</span>' : '<span class="selmsgInd">(Uit)</span>' )  .'</a>' : ''); ?>
-<?php echo (_uid ? '&nbsp;| <a href="index.php?'.$frm_opt.'" title="Geabonneerde forumsfilter wisselen (geeft alleen berichten in forums waarop u geabonneerd bent)">Geabonneerde forums '.(isset($_GET['sub_forum_limit']) ? '<span class="selmsgInd">(<span class="GenTextRed">Aan</span>)</span>' : '<span class="selmsgInd">(Uit)</span>' )  .'</a>' : ''); ?>
-<?php echo (_uid ? '&nbsp;| <a href="index.php?'.$th_opt.'" title="Geabonneerde onderwerpenfilter wisselen (geeft alleen berichten weer van onderwerpen waarop u geabonneerd bent)">Geabonneerde onderwerpen '.(isset($_GET['sub_th_limit']) ? '<span class="selmsgInd">(<span class="GenTextRed">Aan</span>)</span>' : '<span class="selmsgInd">(Uit)</span>' )  .'</a>' : ''); ?>
-&nbsp;| <a href="index.php?<?php echo $rp_opt; ?>" title="Onbeantwoorde berichtenfilter wisselen (geeft alleen onbeantwoorde berichten weer)">Onbeantwoorde berichten <?php echo (isset($_GET['reply_count']) ? '<span class="selmsgInd">(<span class="GenTextRed">Aan</span>)</span>' : '<span class="selmsgInd">(Uit)</span>'); ?></a>
+<a href="index.php?<?php echo $dt_opt; ?>" title="Berichtenfilter &#39;vandaag&#39; wisselen (geeft alleen berichten van vandaag weer)">Berichten van vandaag <?php echo (isset($_GET['date']) ? '<span class="selmsgInd">(<span class="GenTextRed">aan</span>)</span>' : '<span class="selmsgInd">(uit)</span>' )  .'</a>
+'.(_uid ? '&nbsp;| <a href="index.php?'.$un_opt.'" title="Filter ongelezen berichten in/uitschakelen (alleen ongelezen berichten weergeven)">Ongelezen berichten '.(isset($_GET['unread']) ? '<span class="selmsgInd">(<span class="GenTextRed">aan</span>)</span>' : '<span class="selmsgInd">(uit)</span>' )  .'</a>' : ''); ?>
+<?php echo (_uid ? '&nbsp;| <a href="index.php?'.$frm_opt.'" title="Geabonneerde forumsfilter wisselen (geeft alleen berichten in forums waarop u geabonneerd bent)">Geabonneerde forums '.(isset($_GET['sub_forum_limit']) ? '<span class="selmsgInd">(<span class="GenTextRed">aan</span>)</span>' : '<span class="selmsgInd">(uit)</span>' )  .'</a>' : ''); ?>
+<?php echo (_uid ? '&nbsp;| <a href="index.php?'.$th_opt.'" title="Geabonneerde onderwerpenfilter wisselen (geeft alleen berichten weer van onderwerpen waarop u geabonneerd bent)">Geabonneerde onderwerpen '.(isset($_GET['sub_th_limit']) ? '<span class="selmsgInd">(<span class="GenTextRed">aan</span>)</span>' : '<span class="selmsgInd">(uit)</span>' )  .'</a>' : ''); ?>
+&nbsp;| <a href="index.php?<?php echo $rp_opt; ?>" title="Onbeantwoorde berichtenfilter wisselen (geeft alleen onbeantwoorde berichten weer)">Onbeantwoorde berichten <?php echo (isset($_GET['reply_count']) ? '<span class="selmsgInd">(<span class="GenTextRed">aan</span>)</span>' : '<span class="selmsgInd">(uit)</span>'); ?></a>
 <br /><?php echo $admin_cp; ?><br />
 <table cellspacing="0" cellpadding="0" class="ContentTable">
 	<?php echo $message_data; ?>

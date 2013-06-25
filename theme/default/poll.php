@@ -1087,7 +1087,7 @@ function reverse_fmt($data)
 	'.$pl_smiley_disabled_chk.'
 <tr>
 	<td colspan="2" class="ar">'.(!isset($_GET['pl_optedit']) ? '<input type="submit" class="button" name="pl_add" onclick="return check_submission();" value="Optie toevoegen" />' : '<input type="hidden" name="pl_option_id" value="'.$pl_option_id.'" />
-<input type="submit" class="button" name="pl_upd" onclick="return check_submission();" value="Update Optie" />' ) .'</td>
+<input type="submit" class="button" name="pl_upd" onclick="return check_submission();" value="Optie bijwerken" />' ) .'</td>
 </tr>
 <tr>
 	<td colspan="2">

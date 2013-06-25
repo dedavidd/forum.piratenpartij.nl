@@ -433,7 +433,7 @@ function ret_flag($raw=0)
 
 
 	if (empty($_GET['conf_key'])) {
-		error_dialog('Fout', 'De bevestigingssleutel is ongeldig. Controleer uw e-mail en zorg dat u de juist URL hebt ingegeven.');
+		error_dialog('Fout', 'De bevestigingssleutel is ongeldig. Controleer uw e-mail en zorg dat u de juiste URL hebt opgegeven.');
 	}
 
 	/* It is possible that a user may access the email confirmation URL twice, for such a 'rare' case,
@@ -445,7 +445,7 @@ function ret_flag($raw=0)
 
 	$uid = q_singleval('SELECT id FROM fud30_users WHERE conf_key='. _esc($_GET['conf_key']));
 	if (!$uid || (__fud_real_user__ && __fud_real_user__ != $uid)) {
-		error_dialog('Fout', 'De bevestigingssleutel is ongeldig. Controleer uw e-mail en zorg dat u de juist URL hebt ingegeven.');
+		error_dialog('Fout', 'De bevestigingssleutel is ongeldig. Controleer uw e-mail en zorg dat u de juiste URL hebt opgegeven.');
 	}
 	q('UPDATE fud30_users SET users_opt='. q_bitor(users_opt, 131072) .', conf_key=NULL WHERE id='. $uid);
 

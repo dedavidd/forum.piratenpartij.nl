@@ -99,7 +99,7 @@ Druk deze pagina af en zend een fax naar:
 	<td>&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="2">Neem bij vragen alstublieft contact op met <a href="mailto:<?php echo $GLOBALS['ADMIN_EMAIL']; ?>"><?php echo $GLOBALS['ADMIN_EMAIL']; ?></a></td>
+	<td colspan="2">Neem bij vragen contact op met <a href="mailto:<?php echo $GLOBALS['ADMIN_EMAIL']; ?>"><?php echo $GLOBALS['ADMIN_EMAIL']; ?></a></td>
 </tr>
 </table>
 </div>

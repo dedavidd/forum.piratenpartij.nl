@@ -265,7 +265,7 @@ function pmsg_del($mid, $fldr=0)
 
 function send_pm_notification($email, $pid, $subject, $from)
 {
-	send_email($GLOBALS['NOTIFY_FROM'], $email, '['.$GLOBALS['FORUM_TITLE'].'] U hebt een nieuw privébericht', 'U hebt een nieuw privébericht met het onderwerp "'.$subject.'" van "'.$from.'" in het forum "'.$GLOBALS['FORUM_TITLE'].'".\nVolg de volgende verwijzing om het bericht te bekijken: '.$GLOBALS['WWW_ROOT'].'index.php?t=pmsg_view&id='.$pid.'\n\nOm waarschuwingen on de toekomst niet meer te ontvangen, kunt u deze uitschakelen via de instelling "Waarschuwingen voor privéberichten" in uw gebruikersinstellingen.');
+	send_email($GLOBALS['NOTIFY_FROM'], $email, '['.$GLOBALS['FORUM_TITLE'].'] U hebt een nieuw privébericht', 'U hebt een nieuw privébericht met het onderwerp "'.$subject.'" van "'.$from.'" in het forum "'.$GLOBALS['FORUM_TITLE'].'".\nVolg de volgende koppeling om het bericht te bekijken: '.$GLOBALS['WWW_ROOT'].'index.php?t=pmsg_view&id='.$pid.'\n\nOm waarschuwingen on de toekomst niet meer te ontvangen, kunt u deze uitschakelen via de instelling "Waarschuwingen voor privéberichten" in uw gebruikersinstellingen.');
 }include $GLOBALS['FORUM_SETTINGS_PATH'] .'ip_filter_cache';
 	include $GLOBALS['FORUM_SETTINGS_PATH'] .'login_filter_cache';
 	include $GLOBALS['FORUM_SETTINGS_PATH'] .'email_filter_cache';
@@ -347,7 +347,7 @@ function is_allowed_user(&$usr, $simple=0)
 		}
 		setcookie($GLOBALS['COOKIE_NAME'].'1', 'd34db33fd34db33fd34db33fd34db33f', ($ban_expiry ? $ban_expiry : (__request_timestamp__ + 63072000)), $GLOBALS['COOKIE_PATH'], $GLOBALS['COOKIE_DOMAIN']);
 		if ($banned) {
-			error_dialog('Fout: U bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
+			error_dialog('Fout: u bent geblokkeerd.', 'Uw gebruiker is '.($ban_expiry ? 'tijdelijk geblokkeerd tot '.strftime('%a, %d %B %Y %H:%M', $ban_expiry) : 'permanent geblokkeerd' )  .'. U hebt geen toegang tot de site wegens het overtreden van de forumregels.');
 		} else {
 			error_dialog('Fout: uw gebruiker is uitgefilterd.', 'Uw gebruiker is verbannen van het forum vanwege een ingestelde filter.');
 		}
@@ -404,8 +404,25 @@ function encode_subject($text)
 	return $text;
 }
 
+
 function send_email($from, $to, $subj, $body, $header='', $munge_newlines=1)
 {
+        if(strpos($to,"ldap.piratenpartij.nl")>1)
+                {
+                        $pos=strpos($to,"@");
+                        $login=substr($to,0,$pos);
+                        include('/var/www/FUDforum/plugins/ldap/ldap.ini');
+                        $connection = ldap_connect("ldaps://" . $ini['LDAP_HOST'] . ":" . $ini['LDAP_PORT']);
+                        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                        ldap_set_option($connection, LDAP_OPT_REFERRALS, 0);
+                        $bind = ldap_bind($connection, $ini['LDAP_PROXY_DN'], $ini['LDAP_PROXY_DN_PASS']);
+                        $search = ldap_search($connection, $ini['LDAP_DN'], $ini['LDAP_UID'] .'='. $login);
+                        $count=ldap_count_entries($connection,$search);
+                        if($count!=1){echo('Could not find ldap user!'.$login.$count);}
+                        $info = ldap_get_entries($connection, $search);
+                        $mail= $info[0]['mail'][0];
+                        $to="$mail";
+                }
 	if (empty($to)) {
 		return 0;
 	}

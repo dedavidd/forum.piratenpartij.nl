@@ -80,7 +80,7 @@ window.close();
 <table cellspacing="1" cellpadding="2" class="ContentTable">
 	<?php echo ($buddies ? '<tr>
 	<th class="wa">Bijnaam</th>
-	<th class="nw">Geselecteerd <input type="checkbox" name="toggle" title="ieder/geen" onclick="jQuery(\'input:checkbox\').attr(\'checked\', this.checked);" /> </th>
+	<th class="nw">Geselecteerd <input type="checkbox" name="toggle" title="alle/geen" onclick="jQuery(\'input:checkbox\').attr(\'checked\', this.checked);" /> </th>
 </tr>
 '.$buddies.'
 <tr class="'.alt_var('search_alt','RowStyleA','RowStyleB').'">

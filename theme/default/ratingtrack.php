@@ -284,7 +284,7 @@ function th_reply_rebuild($forum_id, $th, $sticky)
 <tr>
 	<td class="mvTc">Gebruiker</td>
 	<td class="mvTc">Waardering</td>
-	<td class="mvTc">handeling</td>
+	<td class="mvTc">Handeling</td>
 </tr>
 <?php echo $table_data; ?>
 <tr>
